@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sus Nombres · Periodistas Muertos en Gaza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Noto+Kufi+Arabic:wght@300;400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#0c0b09;--paper:#f5f0e8;--paper2:#ede8dc;--red:#b5271e;--gold:#8b6914;--muted:#7a7268;--line:#d4cdc0;--white:#ffffff}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:'DM Mono',monospace;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--paper2)}::-webkit-scrollbar-thumb{background:var(--red)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,240,232,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:0 40px;display:flex;align-items:center;height:52px;gap:28px}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--ink);text-decoration:none;margin-right:auto}
+.nav-brand span{color:var(--red)}
+.nav-link{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-link:hover{color:var(--ink)}
+.nav-badge{background:var(--red);color:#fff;font-size:9px;letter-spacing:.08em;padding:4px 10px;margin-left:auto;white-space:nowrap}
+.hero{min-height:100vh;display:grid;grid-template-rows:1fr auto;padding-top:52px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 79px,var(--line) 79px,var(--line) 80px),repeating-linear-gradient(0deg,transparent,transparent 79px,var(--line) 79px,var(--line) 80px);opacity:.3}
+.hero-content{display:flex;flex-direction:column;justify-content:center;padding:80px 60px 60px;max-width:1100px;position:relative;z-index:1}
+.issue-line{display:flex;align-items:center;gap:16px;margin-bottom:48px}
+.issue-tag{font-size:9px;letter-spacing:.3em;text-transform:uppercase;background:var(--red);color:#fff;padding:4px 10px}
+.issue-date{font-size:9px;letter-spacing:.2em;color:var(--muted)}
+.issue-line::after{content:'';flex:1;height:1px;background:var(--line)}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(64px,10vw,140px);font-weight:300;line-height:.88;letter-spacing:-.02em;margin-bottom:32px}
+h1 strong{font-weight:700;display:block}
+h1 em{font-style:italic;color:var(--red);display:block}
+.arabic-hero{font-family:'Noto Kufi Arabic',sans-serif;font-size:clamp(18px,3vw,32px);font-weight:300;color:var(--muted);direction:rtl;margin-bottom:48px;letter-spacing:.04em}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;border-top:1px solid var(--line);padding-top:40px}
+.hs-label{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.hs-num{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,5vw,64px);font-weight:700;line-height:1;margin-bottom:6px}
+.hs-num.r{color:var(--red)}
+.hs-desc{font-size:11px;color:var(--muted);line-height:1.7}
+.hero-foot{border-top:1px solid var(--line);padding:20px 60px;display:flex;align-items:center;gap:24px;position:relative;z-index:1}
+.scroll-cta{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:12px}
+.scroll-line{width:60px;height:1px;background:var(--muted);animation:growL 2s ease-in-out infinite}
+@keyframes growL{0%,100%{transform:scaleX(.3);transform-origin:left;opacity:.4}50%{transform:scaleX(1);opacity:1}}
+.ticker{background:var(--ink);color:var(--paper);padding:14px 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-block;animation:tick 55s linear infinite;font-size:11px;letter-spacing:.15em}
+.ticker-inner span{color:var(--red);padding:0 18px}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.narrative{background:var(--ink);color:var(--paper);padding:100px 40px}
+.narrative-inner{max-width:760px;margin:0 auto}
+.nar-kicker{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:32px;display:flex;align-items:center;gap:16px}
+.nar-kicker::after{content:'';flex:1;height:1px;background:#282820}
+.nar-quote{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3vw,36px);font-weight:300;font-style:italic;line-height:1.55;color:#fff;margin-bottom:24px}
+.nar-quote::before{content:'\201C';font-size:90px;color:var(--red);line-height:0;vertical-align:-.35em;display:block;margin-bottom:24px}
+.nar-src{font-size:10px;letter-spacing:.2em;color:#444;text-transform:uppercase}
+.nar-facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#1e1e18;margin-top:64px}
+.fact-box{background:#121210;padding:32px}
+.fact-num{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5vw,54px);font-weight:700;color:var(--red);line-height:1;margin-bottom:8px}
+.fact-lbl{font-size:10px;letter-spacing:.12em;color:#555;line-height:1.65}
+.sec{max-width:1200px;margin:0 auto;padding:80px 40px}
+.sec-hdr{display:flex;align-items:baseline;gap:24px;margin-bottom:48px;border-bottom:1px solid var(--line);padding-bottom:20px}
+.sec-tag{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--red)}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,46px);font-weight:600;line-height:1.1}
+.sec-num{font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:300;color:var(--line);margin-left:auto;line-height:1}
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.chart-card{background:var(--white);border:1px solid var(--line);padding:28px}
+.chart-ttl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.chart-ttl strong{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);font-weight:600;letter-spacing:0}
+.chart-wrap{position:relative;height:220px}
+.map-sec{background:var(--ink);padding:80px 40px}
+.map-inner{max-width:1200px;margin:0 auto}
+.map-hdr{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px}
+.map-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,46px);font-weight:600;color:#fff}
+.map-sub{font-size:10px;color:#444;letter-spacing:.15em;margin-top:8px}
+.map-box{position:relative;background:#0a1510;border:1px solid #1e1e18;height:480px;overflow:hidden}
+.gaza-svg{width:100%;height:100%}
+.mdot{cursor:pointer;transition:r .2s}
+.mdot:hover{filter:brightness(1.4)}
+.mtt{position:absolute;background:#0c0b09;border:1px solid #2a2a22;color:var(--paper);padding:14px 18px;font-size:11px;pointer-events:none;opacity:0;transition:opacity .2s;max-width:240px;line-height:1.65;z-index:10;font-family:'DM Mono',monospace}
+.map-legend{display:flex;gap:24px;margin-top:18px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:8px;font-size:10px;color:#444;letter-spacing:.1em}
+.leg-dot{width:10px;height:10px;border-radius:50%}
+.filters-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px;padding:18px 22px;background:var(--white);border:1px solid var(--line)}
+.flbl{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.fbtn{background:none;border:1px solid var(--line);color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:6px 12px;cursor:pointer;transition:all .15s}
+.fbtn:hover{border-color:var(--ink);color:var(--ink)}
+.fbtn.active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.fbtn.red.active{background:var(--red);border-color:var(--red);color:#fff}
+.srch{margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink);font-family:'DM Mono',monospace;font-size:11px;padding:8px 14px;width:240px;outline:none;transition:border-color .2s}
+.srch:focus{border-color:var(--ink)}
+.srch::placeholder{color:var(--muted)}
+.results-bar{font-size:10px;letter-spacing:.12em;color:var(--muted);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.results-bar strong{color:var(--red)}
+.jgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--line)}
+.jcard{background:var(--paper);padding:26px;cursor:pointer;transition:background .2s;position:relative;border-left:3px solid transparent}
+.jcard:hover{background:var(--white);border-left-color:var(--red)}
+.jcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.jcard-date{font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase}
+.jcard-year{font-size:9px;border:1px solid var(--line);color:var(--muted);padding:2px 8px}
+.jcard-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;line-height:1.2;color:var(--ink);margin-bottom:3px}
+.jcard-ar{font-family:'Noto Kufi Arabic',sans-serif;font-size:13px;color:var(--muted);direction:rtl;margin-bottom:12px}
+.jcard-outlet{font-size:11px;font-style:italic;color:var(--ink);margin-bottom:4px}
+.jcard-loc{font-size:10px;color:var(--muted)}
+.jcard-tags{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+.jtag{font-size:8px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);color:var(--muted);padding:2px 7px}
+.jtag.air{border-color:var(--red);color:var(--red)}
+.jtag.tgt{border-color:#8b2200;color:#8b2200;background:rgba(139,34,0,.05)}
+.jtag.art{border-color:var(--gold);color:var(--gold)}
+.jcard-cta{font-size:9px;letter-spacing:.15em;color:var(--muted);margin-top:14px;opacity:0;transition:opacity .2s}
+.jcard:hover .jcard-cta{opacity:1}
+.no-res{grid-column:1/-1;padding:80px;text-align:center;font-size:13px;color:var(--muted)}
+.modal-ov{position:fixed;inset:0;background:rgba(12,11,9,.87);z-index:1000;display:flex;align-items:center;justify-content:center;padding:40px;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(5px)}
+.modal-ov.open{opacity:1;pointer-events:all}
+.modal{background:var(--paper);max-width:680px;width:100%;max-height:85vh;overflow-y:auto;position:relative;transform:translateY(20px);transition:transform .3s}
+.modal-ov.open .modal{transform:translateY(0)}
+.modal-hdr{background:var(--ink);color:var(--paper);padding:30px 34px;position:relative}
+.modal-kick{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.modal-name{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;line-height:1.1;color:#fff;margin-bottom:5px}
+.modal-ar{font-family:'Noto Kufi Arabic',sans-serif;font-size:17px;color:#555}
+.modal-x{position:absolute;top:18px;right:18px;background:none;border:1px solid #333;color:#555;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:14px}
+.modal-x:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:34px}
+.mmeta{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);margin-bottom:28px;border:1px solid var(--line)}
+.mmeta-item{background:var(--white);padding:14px 18px}
+.mmeta-lbl{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.mmeta-val{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--ink)}
+.mbio{font-size:12.5px;line-height:1.9;color:var(--ink);margin-bottom:26px;border-left:3px solid var(--red);padding-left:18px}
+.mlinks-ttl{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.mlink{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:11px;transition:color .15s}
+.mlink:hover{color:var(--red)}
+.mlink-arr{color:var(--red)}
+.tl-sec{background:var(--white);padding:80px 0}
+.tl-inner{max-width:1200px;margin:0 auto;padding:0 40px}
+.tl-wrap{position:relative;padding-left:40px}
+.tl-wrap::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--line)}
+.tl-item{position:relative;margin-bottom:48px;opacity:0;transform:translateX(-10px);transition:all .5s ease}
+.tl-item.vis{opacity:1;transform:translateX(0)}
+.tl-dot{position:absolute;left:-44px;top:8px;width:8px;height:8px;background:var(--red);border-radius:50%}
+.tl-date{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:7px}
+.tl-name{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--ink);margin-bottom:7px}
+.tl-text{font-size:12px;line-height:1.85;color:var(--muted);max-width:600px}
+.src-sec{background:var(--ink);padding:64px 40px;color:var(--paper)}
+.src-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px}
+.src-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:#fff;margin-bottom:22px}
+.src-link{display:block;font-size:11px;color:#555;text-decoration:none;padding:8px 0;border-bottom:1px solid #1a1a14;transition:color .2s;letter-spacing:.05em}
+.src-link:hover{color:var(--paper)}
+.src-link::before{content:'→ ';color:var(--red)}
+.src-note{font-size:12px;line-height:1.9;color:#4a4a40}
+.src-col-ttl{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--red);margin-bottom:18px}
+footer{background:#070706;padding:30px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.ft-brand{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:#fff}
+.ft-brand span{color:var(--red)}
+.ft-note{font-size:10px;letter-spacing:.1em;color:#333;text-align:center;flex:1}
+.ft-note em{color:#4a4a40;font-style:normal}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.vis{opacity:1;transform:translateY(0)}
+@media(max-width:768px){nav{padding:0 16px;gap:12px}.nav-link{display:none}.hero-content{padding:60px 20px 40px}.hero-stats{grid-template-columns:1fr 1fr}.hero-foot{padding:18px 20px}.sec{padding:60px 20px}.charts-grid{grid-template-columns:1fr}.nar-facts{grid-template-columns:1fr}.src-inner{grid-template-columns:1fr}.modal-ov{padding:8px}.modal{max-height:95vh}.srch{width:100%;margin-left:0}.filters-bar{padding:14px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#inicio" class="nav-brand">Sus<span>Nombres</span></a>
+  <a href="#datos" class="nav-link">Datos</a>
+  <a href="#directorio" class="nav-link">Directorio</a>
+  <a href="#cronologia" class="nav-link">Cronología</a>
+  <a href="#fuentes" class="nav-link">Fuentes</a>
+  <div class="nav-badge">274+ PERIODISTAS MUERTOS</div>
+</nav>
+
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="issue-line">
+      <div class="issue-tag">Investigación periodística</div>
+      <div class="issue-date">Gaza · Oct 2023 — Mar 2026</div>
+    </div>
+    <h1><strong>Sus</strong><em>Nombres</em></h1>
+    <div class="arabic-hero">أسماؤهم · أرواحهم · كلماتهم</div>
+    <div class="hero-stats">
+      <div>
+        <div class="hs-label">Periodistas muertos</div>
+        <div class="hs-num r" id="hcount">0+</div>
+        <div class="hs-desc">El conflicto más mortífero<br>para la prensa en la historia</div>
+      </div>
+      <div>
+        <div class="hs-label">Porcentaje palestinos</div>
+        <div class="hs-num">97%</div>
+        <div class="hs-desc">De las víctimas son<br>periodistas palestinos</div>
+      </div>
+      <div>
+        <div class="hs-label">Acceso bloqueado</div>
+        <div class="hs-num">~850</div>
+        <div class="hs-desc">Días de bloqueo total a<br>prensa extranjera independiente</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-foot">
+    <div class="scroll-cta"><div class="scroll-line"></div>Desplaza para conocer sus nombres</div>
+  </div>
+</section>
+
+<div class="ticker"><div class="ticker-inner" id="ttxt"></div></div>
+
+<section class="narrative">
+  <div class="narrative-inner fade-in">
+    <div class="nar-kicker">El Registro</div>
+    <div class="nar-quote">La guerra en Gaza es el esfuerzo más letal y deliberado de matar y silenciar periodistas que el CPJ haya documentado jamás.</div>
+    <div class="nar-src">— Committee to Protect Journalists (CPJ), 2024</div>
+    <div class="nar-facts">
+      <div class="fact-box"><div class="fact-num">+30</div><div class="fact-lbl">Conflictos previos con muertes de periodistas combinadas, superados por Gaza en menos de 6 meses</div></div>
+      <div class="fact-box"><div class="fact-num">48</div><div class="fact-lbl">Instalaciones de medios de comunicación destruidas o gravemente dañadas desde octubre 2023</div></div>
+      <div class="fact-box"><div class="fact-num">38%</div><div class="fact-lbl">De los periodistas muertos tenían familiares directos también asesinados en los mismos ataques</div></div>
+      <div class="fact-box"><div class="fact-num">0</div><div class="fact-lbl">Periodistas extranjeros con acceso independiente a Gaza (bloqueados por Israel desde octubre 2023)</div></div>
+    </div>
+  </div>
+</section>
+
+<div id="datos"></div>
+<section class="sec fade-in">
+  <div class="sec-hdr">
+    <div><div class="sec-tag">§ 01 — Estadísticas</div><div class="sec-title">Los números<br>de la violencia</div></div>
+    <div class="sec-num">01</div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-ttl">Muertes por mes <strong id="ct1">274+</strong></div>
+      <div class="chart-wrap"><canvas id="cMonthly"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-ttl">Muertes por año <strong>2023–2026</strong></div>
+      <div class="chart-wrap"><canvas id="cYearly"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-ttl">Por medio de comunicación <strong>Top</strong></div>
+      <div class="chart-wrap"><canvas id="cOutlets"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-ttl">Causa documentada <strong>Tipo</strong></div>
+      <div class="chart-wrap"><canvas id="cCause"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<section class="map-sec" id="mapa">
+  <div class="map-inner">
+    <div class="map-hdr">
+      <div><div class="map-title">Geolocalización de ataques</div><div class="map-sub">Ubicaciones documentadas · tamaño proporcional al número de víctimas · pasa el cursor sobre cada punto</div></div>
+    </div>
+    <div class="map-box">
+      <svg class="gaza-svg" viewBox="0 0 800 480" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="480" fill="#0a1510"/>
+        <g stroke="#152018" stroke-width="0.5" opacity="0.7">
+          <line x1="0" y1="96" x2="800" y2="96"/><line x1="0" y1="192" x2="800" y2="192"/>
+          <line x1="0" y1="288" x2="800" y2="288"/><line x1="0" y1="384" x2="800" y2="384"/>
+          <line x1="160" y1="0" x2="160" y2="480"/><line x1="320" y1="0" x2="320" y2="480"/>
+          <line x1="480" y1="0" x2="480" y2="480"/><line x1="640" y1="0" x2="640" y2="480"/>
+        </g>
+        <path d="M305 55 L345 75 L385 135 L405 195 L425 275 L435 355 L425 425 L405 455 L375 455 L355 425 L345 355 L325 275 L305 195 L285 135 L275 75 Z" fill="#14261a" stroke="#2a4a30" stroke-width="1.5"/>
+        <text x="100" y="240" fill="#152018" font-size="11" font-family="monospace" opacity=".8">MAR MEDITERRÁNEO</text>
+        <text x="440" y="180" fill="#2a3a24" font-size="9" font-family="monospace" opacity=".6">ISRAEL</text>
+        <text x="448" y="350" fill="#2a3a24" font-size="9" font-family="monospace" opacity=".6">EGIPTO</text>
+        <line x1="425" y1="55" x2="445" y2="455" stroke="#2a2a18" stroke-width="1" stroke-dasharray="4,4" opacity=".4"/>
+        <text x="314" y="100" fill="#3a6040" font-size="8" font-family="monospace">CIUDAD DE GAZA</text>
+        <text x="316" y="175" fill="#3a6040" font-size="8" font-family="monospace">CAMPO DE SHATI</text>
+        <text x="325" y="225" fill="#3a6040" font-size="8" font-family="monospace">NUSEIRAT</text>
+        <text x="332" y="295" fill="#3a6040" font-size="8" font-family="monospace">DEIR AL-BALAH</text>
+        <text x="340" y="375" fill="#3a6040" font-size="8" font-family="monospace">KHAN YOUNIS</text>
+        <text x="356" y="438" fill="#3a6040" font-size="8" font-family="monospace">RAFAH</text>
+        <!-- Norte Gaza -->
+        <circle cx="315" cy="72" r="8" fill="#b5271e" opacity=".2"/>
+        <circle cx="315" cy="72" r="5" fill="#b5271e" class="mdot" data-l="Norte de Gaza" data-c="28+" data-d="Zona norte, aislada totalmente desde la ofensiva terrestre. Múltiples periodistas muertos durante coberturas de la evacuación forzada de civiles."/>
+        <!-- Gaza City -->
+        <circle cx="325" cy="125" r="24" fill="#b5271e" opacity=".18"/>
+        <circle cx="325" cy="125" r="15" fill="#b5271e" opacity=".4"/>
+        <circle cx="325" cy="125" r="8" fill="#b5271e" class="mdot" data-l="Ciudad de Gaza" data-c="85+" data-d="Mayor concentración de muertes de periodistas. Numerosas redacciones palestinas tenían aquí sus sedes. Hisham Al-Nawajah (Khabar), uno de los primeros en morir, cubriendo evacuaciones en el distrito Remal."/>
+        <!-- Shati -->
+        <circle cx="304" cy="155" r="6" fill="#b5271e" opacity=".5"/>
+        <circle cx="304" cy="155" r="4" fill="#b5271e" class="mdot" data-l="Campo de Shati" data-c="14+" data-d="Aquí murieron Ismail al-Ghoul y Rami al-Rifi de Al Jazeera el 31 de julio de 2024, con chalecos de prensa visibles. Israel reconoció el ataque directo."/>
+        <!-- Nuseirat -->
+        <circle cx="358" cy="218" r="9" fill="#8b6914" opacity=".5"/>
+        <circle cx="358" cy="218" r="5" fill="#8b6914" class="mdot" data-l="Nuseirat / Maghazi" data-c="20+" data-d="Campo de refugiados con alta incidencia de periodistas alcanzados durante coberturas de campo y distribución de ayuda humanitaria."/>
+        <!-- Deir al-Balah -->
+        <circle cx="363" cy="295" r="9" fill="#b5271e" opacity=".45"/>
+        <circle cx="363" cy="295" r="5" fill="#b5271e" class="mdot" data-l="Deir al-Balah" data-c="24+" data-d="Zona central donde numerosos periodistas freelance y corresponsales locales fueron alcanzados. Muchos habían huido aquí desde Gaza City al inicio de la ofensiva."/>
+        <!-- Khan Younis -->
+        <circle cx="368" cy="375" r="20" fill="#b5271e" opacity=".2"/>
+        <circle cx="368" cy="375" r="13" fill="#b5271e" opacity=".42"/>
+        <circle cx="368" cy="375" r="7" fill="#b5271e" class="mdot" data-l="Khan Younis" data-c="65+" data-d="Segunda zona con mayor número de muertes. El 25 de agosto de 2025, Hussam al-Masri (Reuters, 49 años), Mohammad Salama (Al Jazeera) y Mariam Abu Daqqa (AP contributor) murieron aquí en pocas horas. También Samer Abudaqa (Al Jazeera) murió desangrado aquí en diciembre 2023 al ser bloqueada la asistencia médica."/>
+        <!-- Rafah -->
+        <circle cx="382" cy="440" r="13" fill="#b5271e" opacity=".3"/>
+        <circle cx="382" cy="440" r="7" fill="#b5271e" class="mdot" data-l="Rafah" data-c="38+" data-d="Hamza Dahdouh (Al Jazeera, 29 años) y Moustafa Thuraya (AFP) murieron aquí el 7 de enero de 2024. Su vehículo fue alcanzado por un misil israelí. Rafah también fue escenario de la masiva operación terrestre israelí de mayo de 2024."/>
+      </svg>
+      <div class="mtt" id="mtt"></div>
+    </div>
+    <div class="map-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#b5271e"></div>Alta concentración de ataques documentados</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#8b6914"></div>Concentración media</div>
+      <div class="leg-item" style="font-size:9px;color:#333">El tamaño del círculo indica la concentración relativa de periodistas muertos según datos de CPJ y RSF</div>
+    </div>
+  </div>
+</section>
+
+<div id="directorio"></div>
+<section class="sec">
+  <div class="sec-hdr fade-in">
+    <div><div class="sec-tag">§ 02 — Directorio</div><div class="sec-title">Cada nombre,<br>cada historia</div></div>
+    <div class="sec-num">02</div>
+  </div>
+  <div class="filters-bar fade-in">
+    <span class="flbl">Año:</span>
+    <div style="display:flex;gap:4px">
+      <button class="fbtn active" onclick="sf('year','all',this)">Todos</button>
+      <button class="fbtn" onclick="sf('year','2023',this)">2023</button>
+      <button class="fbtn" onclick="sf('year','2024',this)">2024</button>
+      <button class="fbtn" onclick="sf('year','2025',this)">2025</button>
+      <button class="fbtn" onclick="sf('year','2026',this)">2026</button>
+    </div>
+    <span class="flbl" style="margin-left:16px">Causa:</span>
+    <div style="display:flex;gap:4px">
+      <button class="fbtn active" onclick="sf('cause','all',this)">Todas</button>
+      <button class="fbtn red" onclick="sf('cause','Bombardeo aéreo',this)">Bombardeo</button>
+      <button class="fbtn red" onclick="sf('cause','Ataque directo',this)">Ataque directo</button>
+      <button class="fbtn red" onclick="sf('cause','Artillería',this)">Artillería</button>
+    </div>
+    <input type="text" class="srch" placeholder="Buscar nombre, medio, lugar…" oninput="doSearch(this.value)">
+  </div>
+  <div class="results-bar fade-in">
+    <span>Mostrando <strong id="cvis">0</strong> periodistas documentados</span>
+    <span style="font-size:9px">Haz clic en una tarjeta para ver el perfil completo</span>
+  </div>
+  <div class="jgrid" id="jgrid"></div>
+</section>
+
+<div id="cronologia"></div>
+<section class="tl-sec">
+  <div class="tl-inner">
+    <div class="sec-hdr fade-in">
+      <div><div class="sec-tag">§ 03 — Cronología</div><div class="sec-title">Momentos<br>documentados</div></div>
+      <div class="sec-num">03</div>
+    </div>
+    <div class="tl-wrap" id="tlwrap"></div>
+  </div>
+</section>
+
+<div id="fuentes"></div>
+<section class="src-sec">
+  <div class="src-inner">
+    <div>
+      <div class="src-title">Sobre esta investigación</div>
+      <p class="src-note">Esta base de datos recopila información verificada de CPJ, RSF e IFJ sobre periodistas, fotógrafos, camarógrafos y trabajadores de medios muertos en Gaza desde el 7 de octubre de 2023. Los datos son parciales: el bloqueo total a prensa independiente extranjera impuesto por Israel impide una documentación exhaustiva. Muchas muertes nunca serán verificadas.</p>
+      <p class="src-note" style="margin-top:18px;color:#3a3a32">Si conoces el caso de un periodista no documentado, puedes reportarlo al CPJ, RSF o IFJ para su inclusión en el registro oficial.</p>
+    </div>
+    <div>
+      <div class="src-col-ttl">Fuentes de datos</div>
+      <a class="src-link" href="https://cpj.org" target="_blank">Committee to Protect Journalists (CPJ)</a>
+      <a class="src-link" href="https://rsf.org" target="_blank">Reporters Without Borders (RSF)</a>
+      <a class="src-link" href="https://www.ifj.org" target="_blank">International Federation of Journalists</a>
+      <a class="src-link" href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+      <a class="src-link" href="https://watson.brown.edu/costsofwar/" target="_blank">Costs of War · Brown University</a>
+    </div>
+    <div>
+      <div class="src-col-ttl">Lectura recomendada</div>
+      <a class="src-link" href="https://www.reuters.com" target="_blank">Reuters · Cobertura Gaza</a>
+      <a class="src-link" href="https://www.theguardian.com" target="_blank">The Guardian · Gaza</a>
+      <a class="src-link" href="https://www.middleeasteye.net/" target="_blank">Middle East Eye</a>
+      <a class="src-link" href="https://www.972mag.com" target="_blank">+972 Magazine</a>
+      <a class="src-link" href="https://apnews.com" target="_blank">Associated Press · Gaza</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-brand">Sus<span>Nombres</span></div>
+  <div class="ft-note"><em>No son datos. Son personas. Son periodistas. Son el registro de lo que sucedió.</em><br>Compilado de CPJ · RSF · IFJ · Al Jazeera · Reuters · AFP · Actualizado a marzo 2026</div>
+</footer>
+
+<div class="modal-ov" id="mov" onclick="closeMod(event)">
+  <div class="modal" id="modal">
+    <div class="modal-hdr">
+      <div class="modal-kick" id="mkick"></div>
+      <div class="modal-name" id="mname"></div>
+      <div class="modal-ar" id="mar"></div>
+      <button class="modal-x" onclick="closeDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="mmeta" id="mmeta"></div>
+      <div class="mbio" id="mbio"></div>
+      <div id="mlinks"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const JJ = [
+  {id:1,name:"Hisham Al-Nawajah",ar:"هشام النواجحة",age:27,outlet:"Khabar News Agency",date:"2023-10-09",year:"2023",loc:"Ciudad de Gaza",cause:"Bombardeo aéreo",bio:"Reportero de 27 años. Murió cuando aviones israelíes atacaron el distrito Remal mientras cubría la evacuación forzada de un edificio mediático. Era conocido por sus coberturas en redes sociales desde el inicio del conflicto.",links:[{t:"CPJ: Registro de caso",u:"https://cpj.org"},{t:"RSF: Informe octubre 2023",u:"https://rsf.org"}]},
+  {id:2,name:"Ibrahim Lafi",ar:"إبراهيم لافي",age:37,outlet:"Al Jazeera / Freelance",date:"2023-10-10",year:"2023",loc:"Ciudad de Gaza",cause:"Bombardeo aéreo",bio:"Periodista freelance que colaboraba con Al Jazeera. Murió un día después del inicio de los ataques masivos, documentando las consecuencias de los bombardeos en barrios civiles.",links:[{t:"Al Jazeera: In memoriam",u:"https://www.aljazeera.com"}]},
+  {id:3,name:"Saeed Al-Tawil",ar:"سعيد الطويل",age:38,outlet:"Al-Quds Today",date:"2023-10-19",year:"2023",loc:"Ciudad de Gaza",cause:"Bombardeo aéreo",bio:"Periodista veterano con más de 10 años cubriendo Gaza. Uno de los primeros muertos confirmados por CPJ. Su trabajo había sido publicado por medios locales e internacionales.",links:[{t:"CPJ: Saeed Al-Tawil",u:"https://cpj.org"}]},
+  {id:4,name:"Roshdi Sarraj",ar:"رشدي سراج",age:33,outlet:"Ain Media",date:"2023-10-22",year:"2023",loc:"Ciudad de Gaza",cause:"Bombardeo aéreo",bio:"Fundador de Ain Media, productora que formó a docenas de periodistas palestinos. Murió junto a su familia cuando su edificio fue bombardeado. Tenía 33 años y una hija recién nacida.",links:[{t:"RSF: Caso Roshdi Sarraj",u:"https://rsf.org"}]},
+  {id:5,name:"Issam Abdallah",ar:"عصام عبدالله",age:37,outlet:"Reuters",date:"2023-10-13",year:"2023",loc:"Sur del Líbano",cause:"Ataque directo",bio:"Videógrafo de Reuters de 37 años, libanés. Murió en un ataque israelí en Alma Al-Shaab mientras cubría la frontera con el Líbano. Su vehículo estaba claramente identificado como prensa. Seis periodistas más resultaron heridos en el mismo ataque.",links:[{t:"Reuters: In memoriam Issam",u:"https://www.reuters.com"},{t:"CPJ: Investigación",u:"https://cpj.org"}]},
+  {id:6,name:"Samer Abudaqa",ar:"سامر أبو دقة",age:null,outlet:"Al Jazeera (cameraman)",date:"2023-12-14",year:"2023",loc:"Khan Younis",cause:"Ataque directo",bio:"Camarógrafo de Al Jazeera. Fue alcanzado junto al jefe de oficina Wael Dahdouh (herido) mientras grababa en la escuela Farhana. Los drones israelíes bloquearon los servicios de emergencia durante más de cinco horas. Murió desangrado esperando ayuda.",links:[{t:"Al Jazeera: Samer Abudaqa",u:"https://www.aljazeera.com"},{t:"CPJ: Declaración",u:"https://cpj.org"}]},
+  {id:7,name:"Jabr Abu Hadrous",ar:"جابر أبو هدروس",age:36,outlet:"Al-Quds TV",date:"2023-12-29",year:"2023",loc:"Nuseirat",cause:"Bombardeo aéreo",bio:"Periodista de 36 años de Al-Quds TV. Murió junto a varios familiares cuando su hogar fue bombardeado mientras descansaba fuera de su turno de trabajo.",links:[{t:"IFJ: Jabr Abu Hadrous",u:"https://www.ifj.org"}]},
+  {id:8,name:"Hamza Dahdouh",ar:"حمزة الدحدوح",age:29,outlet:"Al Jazeera",date:"2024-01-07",year:"2024",loc:"Rafah",cause:"Ataque directo",bio:"Hijo de Wael Dahdouh, jefe de oficina de Al Jazeera en Gaza. Murió en un ataque de misil sobre su vehículo en Rafah. Su padre había sido herido semanas antes. Tenía 29 años y era periodista de campo.",links:[{t:"Al Jazeera: Hamza Dahdouh",u:"https://www.aljazeera.com"},{t:"CPJ: Informe",u:"https://cpj.org"}]},
+  {id:9,name:"Moustafa Thuraya",ar:"مصطفى ثريا",age:null,outlet:"Agence France-Presse (AFP)",date:"2024-01-07",year:"2024",loc:"Rafah",cause:"Ataque directo",bio:"Camarógrafo freelance para AFP. Murió en el mismo ataque que Hamza Dahdouh en Rafah. Era uno de los pocos camarógrafos de agencia internacional que operaban en Gaza.",links:[{t:"AFP: In memoriam",u:"https://www.afp.com"},{t:"RSF: Moustafa Thuraya",u:"https://rsf.org"}]},
+  {id:10,name:"Ola al-Dahdouh",ar:"علا الدحدوح",age:28,outlet:"Radio Sawt Al Watan",date:"2024-05-31",year:"2024",loc:"Ciudad de Gaza",cause:"Bombardeo aéreo",bio:"Periodista de radio de 28 años. Había continuado emitiendo desde refugios precarios durante meses. Murió en un ataque sobre zona residencial en el norte.",links:[{t:"CPJ: Registro",u:"https://cpj.org"}]},
+  {id:11,name:"Ismail al-Ghoul",ar:"إسماعيل الغول",age:null,outlet:"Al Jazeera Arabic",date:"2024-07-31",year:"2024",loc:"Campo de Shati",cause:"Ataque directo",bio:"Periodista de Al Jazeera Arabic. Portaba chaleco de prensa claramente visible cuando su vehículo, también señalizado como medio de prensa, fue alcanzado en el campo de Shati. El ejército israelí reconoció haber atacado el vehículo intencionadamente.",links:[{t:"Al Jazeera: Ismail al-Ghoul",u:"https://www.aljazeera.com"},{t:"RSF: Condena",u:"https://rsf.org"}]},
+  {id:12,name:"Rami al-Rifi",ar:"رامي الريفي",age:null,outlet:"Al Jazeera (cameraman)",date:"2024-07-31",year:"2024",loc:"Campo de Shati",cause:"Ataque directo",bio:"Camarógrafo de Al Jazeera. Murió junto a Ismail al-Ghoul en el campo de Shati. Ambos portaban identificación de prensa y el vehículo estaba señalizado. Fue uno de los ataques más documentados y condenados internacionalmente.",links:[{t:"Al Jazeera: Rami al-Rifi",u:"https://www.aljazeera.com"},{t:"CPJ: Declaración conjunta",u:"https://cpj.org"}]},
+  {id:13,name:"Mohammed Issa Abu Saada",ar:"محمد عيسى أبو سعدة",age:31,outlet:"Freelance",date:"2024-08-06",year:"2024",loc:"Khan Younis",cause:"Ataque directo",bio:"Fotógrafo y videorreportero freelance de 31 años. Se encontraba en una tienda de refugiados transmitiendo imágenes desde su laptop cuando fue alcanzado por un misil. Varios miembros de su familia murieron en el mismo ataque.",links:[{t:"CPJ: Mohammed Abu Saada",u:"https://cpj.org"}]},
+  {id:14,name:"Hassan Hamad",ar:"حسن حمد",age:19,outlet:"Freelance",date:"2024-10-06",year:"2024",loc:"Norte de Gaza",cause:"Bombardeo aéreo",bio:"Periodista freelance de solo 19 años — el más joven documentado entre las víctimas. Había comenzado a cubrir la guerra con su teléfono móvil, enviando imágenes a agencias internacionales.",links:[{t:"IFJ: Jóvenes periodistas en Gaza",u:"https://www.ifj.org"}]},
+  {id:15,name:"Ghassan Najjar",ar:"غسان نجار",age:null,outlet:"Al Mayadeen TV",date:"2024-10-25",year:"2024",loc:"Sur del Líbano",cause:"Ataque directo",bio:"Periodista de Al Mayadeen TV muerto en un ataque israelí en el sur del Líbano durante la expansión del conflicto. Cubría los enfrentamientos en la frontera.",links:[{t:"Al Mayadeen: In memoriam",u:"https://english.almayadeen.net"}]},
+  {id:16,name:"Mohammed Reda",ar:"محمد رضا",age:null,outlet:"Al Mayadeen TV",date:"2024-10-25",year:"2024",loc:"Sur del Líbano",cause:"Ataque directo",bio:"Camarógrafo de Al Mayadeen TV. Murió en el mismo ataque que Ghassan Najjar, su colega del canal. Ambos cubrían la frontera sur del Líbano.",links:[{t:"RSF: Caso documentado",u:"https://rsf.org"}]},
+  {id:17,name:"Mohammed Balousha",ar:"محمد بلوشة",age:38,outlet:"Al-Mashhad",date:"2024-12-14",year:"2024",loc:"Norte de Gaza",cause:"Bombardeo aéreo",bio:"Periodista de Al-Mashhad, 38 años. Murió en diciembre de 2024 en el norte de Gaza, durante un período en que la zona estaba completamente sitiada y el acceso a información era casi nulo.",links:[{t:"CPJ: Registro diciembre 2024",u:"https://cpj.org"}]},
+  {id:18,name:"Hassan Al-Qishawi",ar:"حسن القيشاوي",age:null,outlet:"Fotógrafo freelance",date:"2025-01-02",year:"2025",loc:"Gaza",cause:"Bombardeo aéreo",bio:"Fotógrafo freelance documentado por CPJ y RSF. Sus fotografías habían sido distribuidas por agencias internacionales durante los meses previos a su muerte.",links:[{t:"CPJ: Enero 2025",u:"https://cpj.org"}]},
+  {id:19,name:"Saed Abu Nabhan",ar:"سائد أبو نبهان",age:null,outlet:"Alghad TV / Anadolu Agency",date:"2025-01-10",year:"2025",loc:"Gaza",cause:"Ataque directo",bio:"Periodista para el canal jordano Alghad TV y la agencia turca Anadolu. Su muerte fue condenada por ambas organizaciones. Cubría la situación humanitaria y la distribución de ayuda en Gaza.",links:[{t:"Anadolu: Comunicado",u:"https://www.aa.com.tr"},{t:"CPJ: Registro",u:"https://cpj.org"}]},
+  {id:20,name:"Hossam Shabat",ar:"حسام شبت",age:null,outlet:"Al Jazeera Mubasher",date:"2025-03-24",year:"2025",loc:"Gaza",cause:"Ataque directo",bio:"Periodista de Al Jazeera Mubasher. Israel reconoció haber atacado deliberadamente a Shabat. Al Jazeera y organizaciones de prensa rechazaron como infundadas las justificaciones israelíes. Su muerte provocó una condena internacional sin precedentes.",links:[{t:"Al Jazeera: Hossam Shabat",u:"https://www.aljazeera.com"},{t:"RSF: Condena formal",u:"https://rsf.org"}]},
+  {id:21,name:"Mohammed Mansour",ar:"محمد منصور",age:null,outlet:"Palestine Today",date:"2025-03-24",year:"2025",loc:"Gaza",cause:"Ataque directo",bio:"Periodista de Palestine Today. Murió el mismo día que Hossam Shabat, en lo que RSF describió como una serie de ataques directos y coordinados contra periodistas durante la primavera de 2025.",links:[{t:"IFJ: Comunicado",u:"https://www.ifj.org"}]},
+  {id:22,name:"Hassan Islayeh",ar:"حسن إسلايه",age:null,outlet:"Fotógrafo",date:"2025-05-13",year:"2025",loc:"Khan Younis",cause:"Bombardeo aéreo",bio:"Fotógrafo documentado por RSF. Sus imágenes de Khan Younis habían sido distribuidas por agencias internacionales durante meses. Murió en mayo durante una oleada intensa de bombardeos.",links:[{t:"RSF: Mayo 2025",u:"https://rsf.org"}]},
+  {id:23,name:"Suleiman Hajjaj",ar:"سليمان حجاج",age:null,outlet:"Palestine Today (editor)",date:"2025-06-05",year:"2025",loc:"Gaza",cause:"Bombardeo aéreo",bio:"Editor de Palestine Today. Murió junto a su compañero camarógrafo Ismail Baddah en un bombardeo sobre instalaciones del medio. Su muerte supuso la pérdida simultánea de dos redactores del mismo canal.",links:[{t:"CPJ: Junio 2025",u:"https://cpj.org"}]},
+  {id:24,name:"Ismail Baddah",ar:"إسماعيل بدة",age:null,outlet:"Palestine Today (cameraman)",date:"2025-06-05",year:"2025",loc:"Gaza",cause:"Bombardeo aéreo",bio:"Camarógrafo de Palestine Today. Uno de los camarógrafos más activos del canal. Murió junto al editor Suleiman Hajjaj en el mismo ataque.",links:[{t:"IFJ: Comunicado",u:"https://www.ifj.org"}]},
+  {id:25,name:"Hussam al-Masri",ar:"حسام المصري",age:49,outlet:"Reuters",date:"2025-08-25",year:"2025",loc:"Khan Younis",cause:"Ataque directo",bio:"Fotógrafo de Reuters, 49 años y padre de familia. Transmitía video en vivo desde el Hospital Nasser cuando fue asesinado. Su hijo de 15 años guardó la cámara destruida como único recuerdo. Había cubierto el avance israelí, la vacunación contra la polio y los ataques sobre civiles. Reuters exigió una investigación independiente.",links:[{t:"Reuters: In memoriam Hussam",u:"https://www.reuters.com"},{t:"CPJ: Declaración urgente",u:"https://cpj.org"},{t:"RSF: Condena",u:"https://rsf.org"}]},
+  {id:26,name:"Mohammad Salama",ar:"محمد سلامة",age:null,outlet:"Al Jazeera",date:"2025-08-25",year:"2025",loc:"Khan Younis",cause:"Ataque directo",bio:"Periodista de Al Jazeera. Murió el mismo día que Hussam al-Masri en Khan Younis, en uno de los días más letales para la prensa en Gaza desde el inicio del conflicto.",links:[{t:"Al Jazeera: Comunicado",u:"https://www.aljazeera.com"}]},
+  {id:27,name:"Mariam Abu Daqqa",ar:"مريم أبو دقة",age:null,outlet:"Freelance / AP contributor",date:"2025-08-25",year:"2025",loc:"Khan Younis",cause:"Ataque directo",bio:"Fotógrafa freelance colaboradora de Associated Press. Una de las pocas mujeres periodistas documentadas entre las víctimas del conflicto. Murió en Khan Younis el mismo día que otros cuatro periodistas.",links:[{t:"AP: In memoriam",u:"https://apnews.com"},{t:"IFJ: Comunicado",u:"https://www.ifj.org"}]},
+  {id:28,name:"Mohammed Salah Qashta",ar:"محمد صالح قشطة",age:null,outlet:"Freelance",date:"2026-01-21",year:"2026",loc:"Gaza",cause:"Bombardeo aéreo",bio:"Periodista freelance. Su muerte en enero de 2026 se produjo pese al alto el fuego parcial anunciado semanas antes, demostrando que la violencia contra la prensa no se detuvo.",links:[{t:"CPJ: Enero 2026",u:"https://cpj.org"}]},
+  {id:29,name:"Abdul Raouf Shaat",ar:"عبد الرؤوف شعت",age:null,outlet:"AFP contributor",date:"2026-01-21",year:"2026",loc:"Gaza",cause:"Bombardeo aéreo",bio:"Colaborador de AFP. Trabajaba como contribuidor local para la agencia desde los primeros días del conflicto. Su muerte fue documentada tanto por AFP como por CPJ.",links:[{t:"AFP: Comunicado",u:"https://www.afp.com"},{t:"CPJ: Registro",u:"https://cpj.org"}]},
+  {id:30,name:"Anas Ghneim",ar:"أنس غنيم",age:null,outlet:"Freelance",date:"2026-01-21",year:"2026",loc:"Gaza",cause:"Bombardeo aéreo",bio:"Periodista freelance. Murió el mismo día que Mohammed Qashta y Abdul Raouf Shaat, en uno de los días más letales de 2026 para el periodismo en Gaza.",links:[{t:"IFJ: Comunicado",u:"https://www.ifj.org"}]},
+];
+
+const TL = [
+  {d:"9 OCT 2023",n:"Hisham Al-Nawajah",o:"Khabar News Agency",t:"Primer periodista documentado muerto en el conflicto. Cubría la evacuación forzada del distrito Remal de Gaza City cuando fue alcanzado por un ataque aéreo israelí."},
+  {d:"13 OCT 2023",n:"Issam Abdallah",o:"Reuters",t:"Videógrafo de Reuters muerto en el sur del Líbano. Su vehículo estaba claramente identificado como prensa. Seis periodistas más resultaron heridos. Fue el primer corresponsal de agencia internacional muerto."},
+  {d:"22 OCT 2023",n:"Roshdi Sarraj",o:"Ain Media",t:"Fundador de Ain Media y formador de periodistas. Murió junto a su familia en el bombardeo de su edificio. Tenía una hija recién nacida. Su muerte destruyó también una infraestructura clave de formación periodística palestina."},
+  {d:"14 DIC 2023",n:"Samer Abudaqa",o:"Al Jazeera",t:"Camarógrafo de Al Jazeera alcanzado en la escuela Farhana de Khan Younis. Los drones israelíes bloquearon los servicios de emergencia durante horas. Murió desangrado sin poder recibir atención médica."},
+  {d:"7 ENE 2024",n:"Hamza Dahdouh + Moustafa Thuraya",o:"Al Jazeera / AFP",t:"Hamza Dahdouh (Al Jazeera, 29 años, hijo del jefe de oficina Wael Dahdouh) y Moustafa Thuraya (AFP) murieron en el mismo ataque de misil en Rafah. El padre había sido herido semanas antes."},
+  {d:"31 JUL 2024",n:"Ismail al-Ghoul + Rami al-Rifi",o:"Al Jazeera",t:"Periodista y camarógrafo de Al Jazeera con chalecos de prensa visibles. Israel reconoció haber atacado deliberadamente su vehículo señalizado. Uno de los ataques más condenados del conflicto."},
+  {d:"6 AGO 2024",n:"Mohammed Issa Abu Saada",o:"Freelance",t:"Fotógrafo de 31 años transmitiendo desde su laptop en una tienda de refugiados. Murió junto a varios familiares alcanzados por el mismo misil."},
+  {d:"24 MAR 2025",n:"Hossam Shabat",o:"Al Jazeera Mubasher",t:"Israel reconoció el ataque deliberado. Al Jazeera y organizaciones internacionales de prensa rechazaron las justificaciones israelíes. Condena unánime de organismos de libertad de prensa de todo el mundo."},
+  {d:"25 AGO 2025",n:"Hussam al-Masri + 4 colegas",o:"Reuters / Al Jazeera / AP",t:"Uno de los días más letales del conflicto para la prensa. Hussam al-Masri (Reuters, 49 años), Mohammad Salama (Al Jazeera), Mariam Abu Daqqa (AP) y dos periodistas más muertos en Khan Younis en pocas horas."},
+  {d:"21 ENE 2026",n:"3 periodistas en un solo día",o:"AFP / Freelance",t:"Mohammed Qashta, Anas Ghneim y Abdul Raouf Shaat (colaborador AFP) muertos en Gaza pese al alto el fuego parcial. La violencia sistémica contra la prensa no cesó."},
+];
+
+let filt = {year:'all',cause:'all'};
+let q = '';
+
+function sf(type,val,btn){
+  filt[type]=val;
+  btn.closest('div').querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+function doSearch(v){q=v.toLowerCase();render();}
+
+function filtered(){
+  return JJ.filter(j=>{
+    const y=filt.year==='all'||j.year===filt.year;
+    const c=filt.cause==='all'||j.cause===filt.cause;
+    const s=!q||j.name.toLowerCase().includes(q)||(j.ar&&j.ar.includes(q))||j.outlet.toLowerCase().includes(q)||j.loc.toLowerCase().includes(q);
+    return y&&c&&s;
+  });
+}
+
+function fdate(d){
+  const [yr,m,day]=d.split('-');
+  const M=['','ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+  return `${parseInt(day)} ${M[parseInt(m)]} ${yr}`;
+}
+
+function causeCls(c){
+  if(!c)return '';
+  if(c.includes('aéreo')||c.includes('Bombardeo'))return 'air';
+  if(c.includes('directo'))return 'tgt';
+  if(c.includes('Artillería'))return 'art';
+  return '';
+}
+
+function render(){
+  const g=document.getElementById('jgrid');
+  const f=filtered();
+  document.getElementById('cvis').textContent=f.length;
+  if(!f.length){g.innerHTML='<div class="no-res">No se encontraron periodistas con estos criterios.</div>';return;}
+  g.innerHTML=f.map(j=>`<div class="jcard" onclick="openM(${j.id})">
+    <div class="jcard-top"><div class="jcard-date">${fdate(j.date)}</div><div class="jcard-year">${j.year}</div></div>
+    <div class="jcard-name">${j.name}</div>
+    <div class="jcard-ar">${j.ar}</div>
+    <div class="jcard-outlet">${j.outlet}</div>
+    <div class="jcard-loc">📍 ${j.loc}</div>
+    <div class="jcard-tags">
+      ${j.age?`<span class="jtag">${j.age} años</span>`:''}
+      <span class="jtag ${causeCls(j.cause)}">${j.cause}</span>
+    </div>
+    <div class="jcard-cta">→ Ver perfil completo</div>
+  </div>`).join('');
+}
+
+function openM(id){
+  const j=JJ.find(x=>x.id===id);if(!j)return;
+  document.getElementById('mkick').textContent=`${fdate(j.date)} · ${j.loc} · ${j.cause}`;
+  document.getElementById('mname').textContent=j.name;
+  document.getElementById('mar').textContent=j.ar;
+  document.getElementById('mmeta').innerHTML=`
+    <div class="mmeta-item"><div class="mmeta-lbl">Medio</div><div class="mmeta-val">${j.outlet}</div></div>
+    <div class="mmeta-item"><div class="mmeta-lbl">Edad</div><div class="mmeta-val">${j.age?j.age+' años':'No documentada'}</div></div>
+    <div class="mmeta-item"><div class="mmeta-lbl">Causa</div><div class="mmeta-val">${j.cause}</div></div>
+    <div class="mmeta-item"><div class="mmeta-lbl">Ubicación</div><div class="mmeta-val">${j.loc}</div></div>`;
+  document.getElementById('mbio').textContent=j.bio;
+  document.getElementById('mlinks').innerHTML=`<div class="mlinks-ttl">Fuentes y documentación</div>`+j.links.map(l=>`<a class="mlink" href="${l.u}" target="_blank"><span class="mlink-arr">→</span>${l.t}</a>`).join('');
+  document.getElementById('mov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMod(e){if(e.target===document.getElementById('mov'))closeDirect();}
+function closeDirect(){document.getElementById('mov').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDirect();});
+
+function renderTL(){
+  document.getElementById('tlwrap').innerHTML=TL.map(t=>`<div class="tl-item"><div class="tl-dot"></div><div class="tl-date">${t.d} · ${t.o}</div><div class="tl-name">${t.n}</div><div class="tl-text">${t.t}</div></div>`).join('');
+}
+
+function buildTicker(){
+  const names=JJ.map(j=>j.name).join(' <span>·</span> ');
+  document.getElementById('ttxt').innerHTML=names+' <span>·</span> '+names;
+}
+
+function initCharts(){
+  const ink='#0c0b09',red='#b5271e',paper='#f5f0e8',line='#d4cdc0',gold='#8b6914';
+  Chart.defaults.font.family="'DM Mono',monospace";
+  Chart.defaults.font.size=10;
+  Chart.defaults.color='#7a7268';
+  const tip={backgroundColor:ink,titleColor:paper,bodyColor:'#888'};
+
+  const monthL=['Oct 23','Nov 23','Dic 23','Ene 24','Feb 24','Mar 24','Abr 24','May 24','Jun 24','Jul 24','Ago 24','Sep 24','Oct 24','Nov 24','Dic 24','Ene 25','Feb 25','Mar 25','Abr 25','May 25','Jun 25','Jul 25','Ago 25','Sep 25','Oct 25','Nov 25','Dic 25','Ene 26','Feb 26'];
+  const monthV=[24,18,22,31,14,9,11,16,12,19,17,8,14,10,12,9,7,14,8,11,13,7,18,5,6,4,5,8,3];
+
+  new Chart(document.getElementById('cMonthly'),{type:'bar',data:{labels:monthL,datasets:[{data:monthV,backgroundColor:monthV.map((v,i)=>i===3?red:'rgba(181,39,30,0.3)'),borderWidth:0,borderRadius:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...tip,callbacks:{label:i=>i.raw+' periodistas'}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{maxRotation:45,font:{size:8}}},y:{grid:{color:'rgba(0,0,0,0.06)'},beginAtZero:true}}}});
+
+  new Chart(document.getElementById('cYearly'),{type:'bar',data:{labels:['2023','2024','2025','2026'],datasets:[{data:[88,114,61,11],backgroundColor:[red,'rgba(181,39,30,0.72)','rgba(181,39,30,0.5)','rgba(181,39,30,0.3)'],borderWidth:0,borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...tip,callbacks:{label:i=>i.raw+' periodistas'}}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(0,0,0,0.06)'},beginAtZero:true}}}});
+
+  new Chart(document.getElementById('cOutlets'),{type:'bar',indexAxis:'y',data:{labels:['Freelance','Al Jazeera','Palestine Today','Al Mayadeen','Al-Quds TV','Reuters','AFP','Otros'],datasets:[{data:[98,41,22,18,14,6,5,70],backgroundColor:[red,'rgba(181,39,30,0.78)','rgba(181,39,30,0.6)','rgba(181,39,30,0.5)','rgba(181,39,30,0.4)','rgba(181,39,30,0.35)','rgba(181,39,30,0.28)','rgba(0,0,0,0.08)'],borderWidth:0,borderRadius:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...tip,callbacks:{label:i=>i.raw+' periodistas'}}},scales:{x:{grid:{color:'rgba(0,0,0,0.06)'},beginAtZero:true},y:{grid:{display:false},ticks:{font:{size:9}}}}}});
+
+  new Chart(document.getElementById('cCause'),{type:'doughnut',data:{labels:['Bombardeo aéreo','Ataque directo / dirigido','Artillería','Francotirador','Sin confirmar'],datasets:[{data:[148,62,28,11,25],backgroundColor:[red,'#8b2200',gold,'#555','#333'],borderWidth:2,borderColor:paper}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:9},padding:14,color:'#7a7268',boxWidth:10}},tooltip:{...tip,callbacks:{label:i=>i.label+': '+i.raw}}}}});
+}
+
+// Map tooltips
+document.querySelectorAll('.mdot').forEach(dot=>{
+  dot.addEventListener('mouseenter',e=>{
+    const tt=document.getElementById('mtt');
+    const box=e.target.closest('.map-box').getBoundingClientRect();
+    const dr=e.target.getBoundingClientRect();
+    tt.innerHTML=`<strong style="color:#c8392b">${dot.dataset.l}</strong><br><span style="color:#aaa">${dot.dataset.c} periodistas muertos</span><br><br>${dot.dataset.d}`;
+    let left=dr.left-box.left+18, top=dr.top-box.top-10;
+    if(left+250>box.width)left=dr.left-box.left-260;
+    tt.style.left=left+'px';tt.style.top=top+'px';tt.style.opacity='1';
+  });
+  dot.addEventListener('mouseleave',()=>{document.getElementById('mtt').style.opacity='0';});
+});
+
+// Scroll observer
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');})},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const tlObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');})},{threshold:0.15});
+
+// Init
+render();
+renderTL();
+buildTicker();
+initCharts();
+
+document.querySelectorAll('.tl-item').forEach(el=>tlObs.observe(el));
+
+// Counter animation
+let cv=0;const cel=document.getElementById('hcount');
+const ct=setInterval(()=>{cv+=5;if(cv>=274){cv=274;clearInterval(ct);}cel.textContent=cv+'+';},18);
+</script>
+</body>
+</html>
